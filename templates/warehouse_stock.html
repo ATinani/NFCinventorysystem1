@@ -1,0 +1,79 @@
+{% extends 'partials/base.html' %}
+{% load widget_tweaks static %}
+
+{% block title %} Warehouse Stock {% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-image: url("{% static 'images/NV3.JPEG' %}");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    .table thead.bg-info {
+        background-color: #343a40 !important;
+        border-color: #343a40 !important;
+    }
+    .btn-primary {
+        background-color: #343a40 !important;
+        border-color: #343a40 !important;
+        color: #fff !important;
+    }
+</style>
+
+{% include 'partials/topnav.html' %}
+
+<!-- Warehouse Stock Management -->
+<div class="container">
+    <h3 class="my-4">Manage Warehouse Stock</h3>
+
+    <div class="row my-4">
+        <!-- Stock Update Form -->
+        <div class="col-md-4">
+            <h5>Add or Update Stock</h5>
+            <form method="POST" action="{% url 'update-stock' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="product" class="form-label">Product:</label>
+                    <select class="form-control" id="product" name="product">
+                        {% for product in products %}
+                        <option value="{{ product.id }}">{{ product.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity (Add to Stock):</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Update Stock</button>
+            </form>
+        </div>
+
+        <!-- Current Stock Table -->
+        <div class="col-md-8">
+            <h5>Current Stock Levels</h5>
+            <table class="table bg-white">
+                <thead class="bg-info">
+                    <tr class="text-white">
+                        <th scope="col">Product</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Available Stock</th>
+                        <th scope="col">Measurement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.category }}</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.measurement }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

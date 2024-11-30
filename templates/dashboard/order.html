@@ -1,0 +1,102 @@
+{% extends 'partials/base.html' %}
+{% load widget_tweaks static %}
+
+{% block title %} Order Page {% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-image: url("{% static 'images/NV3.JPEG' %}");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+    .table thead.bg-info {
+        background-color: #343a40 !important; /* Dark gray background */
+        border-color: #343a40 !important;
+    }
+
+    .btn-primary {
+        background-color: #343a40 !important; /* Dark gray background */
+        border-color: #343a40 !important;
+        color: #fff !important;
+    }
+
+    .btn-primary:hover {
+        background-color: #555 !important; /* Slightly lighter gray on hover */
+        border-color: #555 !important;
+    }
+
+    .table th, .table td {
+        color: #212529 !important; /* Dark text for readability */
+    }
+
+    .table th {
+        background-color: #343a40 !important; /* Dark gray for header */
+        color: white !important;
+    }
+</style>
+
+{% include 'partials/topnav.html' %}
+
+<!-- Display Total Items Used -->
+<div class="container my-4">
+    <h3 class="text-white">Total Items Used Today: {{ total_items_used }}</h3>
+</div>
+
+<!-- Order Form and Tables Section -->
+<div class="container">
+    <div class="row my-4">
+
+        <!-- Order Request Form -->
+        <div class="col-md-4">
+            <h5 class="text-white">Place an Order</h5>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="product" class="form-label text-white">Product:</label>
+                    <select class="form-control" id="product" name="product">
+                        {% for product in products %}
+                        <option value="{{ product.id }}">{{ product.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="quantity" class="form-label text-white">Order Quantity:</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Make Request</button>
+            </form>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="col-md-8">
+            <h5 class="text-white">Orders Made</h5>
+            <table class="table bg-white">
+                <thead class="bg-info">
+                    <tr class="text-white">
+                        <th scope="col">Product</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Order by</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.product.name }}</td>
+                        <td>{{ order.product.category }}</td>
+                        <td>{{ order.order_quantity }}</td>
+                        <td>{{ order.staff.username }}</td>
+                        <td>{{ order.date }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

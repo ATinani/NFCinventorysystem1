@@ -1,0 +1,60 @@
+{% load widget_tweaks %}
+<div class="container">
+    <div class="row mt-4">
+        <!-- Make Request Form -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header text-white bg-primary">
+                    <strong>Make Request</strong>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="product">Product:</label>
+                            {{ form.product|add_class:"form-control" }}
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="order_quantity">Order quantity:</label>
+                            {{ form.order_quantity|add_class:"form-control" }}
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block mt-3">Make Request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Records Table -->
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header text-white bg-primary">
+                    <strong>Orders Records</strong>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-bordered">
+                        <thead class="bg-info text-white">
+                            <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for orders in orders %}
+                            {% if orders.staff == user %}
+                            <tr>
+                                <td>{{ orders.product.name }}</td>
+                                <td>{{ orders.product.category }}</td>
+                                <td>{{ orders.order_quantity }}</td>
+                                <td>{{ orders.date }}</td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+{% extends 'partials/base.html' %}
+{% load widget_tweaks static %}
+
+{% block title %} Inventory Request {% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-image: url("{% static 'images/NV3.JPEG' %}");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    .table thead.bg-info {
+        background-color: #343a40 !important;
+        border-color: #343a40 !important;
+    }
+    .btn-primary {
+        background-color: #343a40 !important;
+        border-color: #343a40 !important;
+        color: #fff !important;
+    }
+</style>
+
+{% include 'partials/topnav.html' %}
+
+<div class="container">
+    <h3 class="my-4">Chef's Inventory Request</h3>
+
+    <div class="row my-4">
+        <!-- Inventory Request Form -->
+        <div class="col-md-4">
+            <h5>Request Stock</h5>
+            <form method="POST" action="{% url 'chef-request-stock' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="product" class="form-label">Product:</label>
+                    <select class="form-control" id="product" name="product">
+                        {% for product in products %}
+                        <option value="{{ product.id }}">{{ product.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity:</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Request Stock</button>
+            </form>
+        </div>
+
+        <!-- Requested Stock Table -->
+        <div class="col-md-8">
+            <h5>Requested Stocks</h5>
+            <table class="table bg-white">
+                <thead class="bg-info">
+                    <tr class="text-white">
+                        <th scope="col">Product</th>
+                        <th scope="col">Quantity Requested</th>
+                        <th scope="col">Date Requested</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in chef_requests %}
+                    <tr>
+                        <td>{{ request.product.name }}</td>
+                        <td>{{ request.quantity }}</td>
+                        <td>{{ request.date_requested|date:"F d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
